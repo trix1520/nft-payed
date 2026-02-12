@@ -175,7 +175,7 @@ async def process_wallet(message: types.Message, state: FSMContext):
     
     # Отправляем подтверждение пользователю
     await message.answer(
-        "✅ Заявка на выплату успешно отправлена!\n\n",
+        "✅ Заявка на выплату успешно отправлена!\n\n"
         "Ожидайте подтверждения администратора. Обычно это занимает от нескольких минут до нескольких часов.\n\n",
         reply_markup=get_start_keyboard()
     )
