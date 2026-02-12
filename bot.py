@@ -125,7 +125,7 @@ async def start_payment_request(message: types.Message, state: FSMContext):
     await state.set_state(PaymentRequest.waiting_for_link)
     await message.answer(
         "💰 Отправьте ссылку на подарок:\n\n"
-        "Пример: https://getgems.io/collection/...",
+        "Пример: t.me/nft/...",
         reply_markup=types.ReplyKeyboardRemove()  # Убираем клавиатуру
     )
 
@@ -134,10 +134,7 @@ async def start_payment_request(message: types.Message, state: FSMContext):
 async def process_link(message: types.Message, state: FSMContext):
     # Простая валидация ссылки
     link = message.text.strip()
-    if not link.startswith(('http://', 'https://')):
-        await message.answer("❌ Пожалуйста, отправьте корректную ссылку, начинающуюся с http:// или https://")
-        return
-    
+        
     await state.update_data(link=link)
     await state.set_state(PaymentRequest.waiting_for_screenshot)
     await message.answer("📸 Отлично! Теперь отправьте скриншот подарка:")
@@ -180,7 +177,6 @@ async def process_wallet(message: types.Message, state: FSMContext):
     await message.answer(
         "✅ Заявка на выплату успешно отправлена!\n\n"
         "Ожидайте подтверждения администратора. Обычно это занимает от нескольких минут до нескольких часов.\n\n"
-        "Статус заявки можно узнать у администратора @your_admin_username",
         reply_markup=get_start_keyboard()
     )
     
@@ -211,7 +207,6 @@ async def send_to_admin(user, link, screenshot_id, wallet):
         f"🔗 <b>Ссылка на подарок:</b>\n<code>{link}</code>\n\n"
         f"💎 <b>Адрес TON кошелька:</b>\n<code>{wallet}</code>\n\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📸 <b>Скриншот подарка:</b>"
     )
     
     # Отправляем сообщение с фото
