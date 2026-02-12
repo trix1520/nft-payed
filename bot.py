@@ -47,54 +47,57 @@ def get_start_keyboard():
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
-        self.wfile.write(b'''
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>NFT Payment Bot Status</title>
-                <meta charset="UTF-8">
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 40px;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        text-align: center;
-                    }
-                    .container {
-                        max-width: 600px;
-                        margin: 0 auto;
-                        padding: 20px;
-                        background: rgba(255,255,255,0.1);
-                        border-radius: 10px;
-                        backdrop-filter: blur(10px);
-                    }
-                    h1 { font-size: 2.5em; margin-bottom: 20px; }
-                    .status {
-                        padding: 15px;
-                        background: rgba(0,255,0,0.2);
-                        border-radius: 5px;
-                        margin: 20px 0;
-                    }
-                    .emoji { font-size: 3em; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="emoji">🤖</div>
-                    <h1>NFT Payment Bot</h1>
-                    <div class="status">
-                        ✅ Бот работает и принимает заявки!
-                    </div>
-                    <p>Version: 1.0.0</p>
-                    <p>Status: Active</p>
-                    <p>Last Check: ''' + str(self.date_time_string()) + '''</p>
-                </div>
-            </body>
-        </html>
-        ''')
+        # Вся строка написана как обычный текст без символов вне ASCII,
+        # а эмодзи и спецсимволы передаются как строки UTF-8
+        html_content = '''<!DOCTYPE html>
+<html>
+    <head>
+        <title>NFT Payment Bot Status</title>
+        <meta charset="UTF-8">
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                text-align: center;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+            }}
+            h1 {{ font-size: 2.5em; margin-bottom: 20px; }}
+            .status {{
+                padding: 15px;
+                background: rgba(0,255,0,0.2);
+                border-radius: 5px;
+                margin: 20px 0;
+            }}
+            .emoji {{ font-size: 3em; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="emoji">🤖</div>
+            <h1>NFT Payment Bot</h1>
+            <div class="status">
+                ✅ Бот работает и принимает заявки!
+            </div>
+            <p>Version: 1.0.0</p>
+            <p>Status: Active</p>
+            <p>Last Check: {date}</p>
+        </div>
+    </body>
+</html>'''.format(date=self.date_time_string())
+        
+        # Кодируем готовую строку в байты UTF-8
+        self.wfile.write(html_content.encode('utf-8'))
     
     def log_message(self, format, *args):
         return  # Отключаем логирование запросов
